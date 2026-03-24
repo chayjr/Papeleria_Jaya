@@ -4,8 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
+    <div class ="container">
+        <aside class ="sidebar">
+            <h2 class="logo">PAPELERIA JAYA</h2>
+
+            <ul>
+                <!--Este es para el apartado del navbar de dasboard-->
+                <li class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('dashboard') }}">
+                        <i class="fa-solid fa-chart-line"></i>Dasboard
+                    </a>
+                </li>
+                <!--Este es para el apartado del navbar de productos-->
+                <li class="{% if request.endpoint == 'productos' %}active{% endif %}">
+                    <a href="{{ url_for('productos') }}">
+                        <i class="fa-solid fa-chart-line"></i>Productos
+                    </a>
+                </li>
+                <!--Este es para el apartado del navbar de ventas-->
+                <li class="{% if request.endpoint == 'ventas' %}active{% endif %}">
+                    <a href="{{ url_for('ventas') }}">
+                        <i class="fa-solid fa-chart-line"></i>Ventas
+                    </a>
+                </li>
+                <!--Este es para el apartado del navbar de Reportes-->
+                <li class="{% if request.endpoint == 'reportes' %}active{% endif %}">
+                    <a href="{{ url_for('reportes') }}">
+                        <i class="fa-solid fa-chart-line"></i>Reportes
+                    </a>
+                </li>
+                <!--Este es para el apartado del navbar de usuarios-->
+                <li class="{% if request.endpoint == 'usuarios' %}active{% endif %}">
+                    <a href="{{ url_for('usuarios') }}">
+                        <i class="fa-solid fa-chart-line"></i>Usuarios
+                    </a>
+                </li>
+            </ul>
+        </aside>
+    </div>
+    
 <body>
     
 </body>
