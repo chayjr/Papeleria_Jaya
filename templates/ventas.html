@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ventas</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="menu">
+        <button class="main-btn">PANEL PRINCIPAL</button>
+        <button class="menu-btn"><span class="icon">📦</span>PRODUCTOS</button>
+        <button class="menu-btn"><span class="icon">🛒</span>VENTAS</button>
+        <button class="menu-btn"><span class="icon">📖</span>REPORTES</button>
+        <button class="menu-btn"><span class="icon">👥</span>USUARIOS</button>
+    </div>
+
+    <a href="/logout">
+        <button class="logout">CERRAR SESIÓN</button>
+    </a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <div class="title">Ventas</div>
+
+    <!-- BUSCADOR (MISMO DISEÑO) -->
+    <div class="search-container">
+        <button class="btn blue">Buscar producto</button>
+        <input type="text" id="busqueda" placeholder="Buscar producto">
+        <button class="btn blue" id="btnAgregar">Agregar</button>
+    </div>
+
+    <!-- FORM OCULTO -->
+    <form id="formAgregar" action="/agregar" method="POST" style="display:none;">
+        <input type="hidden" name="producto" id="producto_id">
+        <input type="hidden" name="cantidad" id="cantidad">
+    </form>
+
+    <h3>Productos seleccionados</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>PRECIO $</th>
+            <th>SUBTOTAL</th>
+            <th>ELIMINAR</th>
+        </tr>
+
+        {% for item in carrito %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>$ {{ item.precio }}</td>
+            <td><b>$ {{ item.subtotal }}</b></td>
+            <td>
+                <a href="/eliminar/{{ loop.index0 }}">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="total">TOTAL: $ {{ total }}</div>
+
+    <div class="payment">
+        <b>Método de pago:</b><br><br>
+        <label><input type="radio"> Efectivo</label>
+    </div>
+
+    <div class="total">Subtotal: $ {{ total }}</div>
+
+    <div class="actions">
+
+        <a href="/guardar_venta">
+            <button class="btn green">Registrar venta</button>
+        </a>
+
+        <a href="/nueva">
+            <button class="btn orange">Cancelar venta</button>
+        </a>
+
+        <button class="btn cyan">Nueva venta</button>
+
+    </div>
+
+    <div class="footer-btn">Ver historial de ventas</div>
+
+</div>
+
+</div>
+
+<!-- SCRIPT SIN ERRORES -->
+<script>
+document.getElementById("btnAgregar").addEventListener("click", function(){
+
+    let nombre = document.getElementById("busqueda").value.trim();
+
+    if(nombre === ""){
+        alert("Escribe un producto");
+        return;
+    }
+
+    let productos = {{ productos | default([]) | tojson }};
+
+    if(productos.length === 0){
+        alert("No hay productos disponibles");
+        return;
+    }
+
+    let producto = productos.find(p =>
+        p.nombre.toLowerCase().includes(nombre.toLowerCase())
+    );
+
+    if(!producto){
+        alert("Producto no encontrado");
+        return;
+    }
+
+    let cantidad = prompt("Cantidad:");
+    if(!cantidad || cantidad <= 0){
+        alert("Cantidad inválida");
+        return;
+    }
+
+    document.getElementById("producto_id").value = producto.id;
+    document.getElementById("cantidad").value = cantidad;
+
+    document.getElementById("formAgregar").submit();
+});
+</script>
+
+</body>
+</html>
