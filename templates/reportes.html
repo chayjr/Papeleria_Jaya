@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reportes</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="menu">
+        <button class="main-btn">PANEL PRINCIPAL</button>
+        <button class="menu-btn"><span class="icon">📦</span>PRODUCTOS</button>
+        <button class="menu-btn"><span class="icon">🛒</span>VENTAS</button>
+        <button class="menu-btn"><span class="icon">📖</span>REPORTES</button>
+        <button class="menu-btn"><span class="icon">👥</span>USUARIOS</button>
+    </div>
+
+    <a href="/logout">
+        <button class="logout">CERRAR SESIÓN</button>
+    </a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <div class="title">Reportes</div>
+
+    <div class="top-buttons">
+        <button class="inv">Inventario</button>
+        <button class="ven">Ventas</button>
+        <button class="stock">Bajo stock</button>
+    </div>
+
+    <!-- 🔥 FORM FILTRO -->
+    <form method="GET" action="/reportes" class="filter">
+        <label>Fecha inicio:</label>
+        <input type="date" name="inicio">
+
+        <label>Fecha fin:</label>
+        <input type="date" name="fin">
+
+        <button class="generate">Generar reporte</button>
+    </form>
+
+    <!-- TABLA -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>TOTAL</th>
+            <th>FECHA</th>
+            <th>ELIMINAR</th>
+        </tr>
+
+        {% for r in reportes %}
+        <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.nombre }}</td>
+            <td>{{ r.cantidad }}</td>
+            <td>$ {{ r.total }}</td>
+            <td>{{ r.fecha }}</td>
+            <td>
+                <a href="/eliminar_reporte/{{ r.id }}">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="total">TOTAL: $ {{ total }}</div>
+
+    <div class="info">
+        <p><b>Total de ventas:</b> $ {{ total }}</p>
+        <p><b>Cantidad de ventas:</b> {{ cantidad }}</p>
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>
