@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+/* 🔹 SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: #a8d46f;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    background: #e5e5e5;
+    text-align: center;
+    padding: 12px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+/* MENÚ */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.menu a {
+    text-decoration: none;
+}
+
+.menu button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #25b3c8;
+    border: none;
+    padding: 15px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.menu button:hover {
+    background: #1fa2b5;
+}
+
+/* 🔥 LOGOUT ABAJO */
+.logout {
+    margin-top: auto;
+}
+
+.logout button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #e5e5e5;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 🔹 CONTENIDO */
+.content {
+    flex: 1;
+    background: #dcdcdc;
+    padding: 40px;
+}
+
+.content h1 {
+    color: #4f6fe5;
+    font-size: 40px;
+}
+
+/* BOTONES */
+.actions {
+    margin: 20px 0;
+}
+
+.actions button {
+    padding: 10px 20px;
+    border: none;
+    margin-right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add { background: #5ecad0; }
+.edit { background: #bde48f; }
+.delete { background: #f29b63; }
+
+/* TABLA */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #cfcfcf;
+}
+
+th, td {
+    border: 2px solid black;
+    padding: 20px;
+    text-align: center;
+}
+
+th {
+    background: #cfcfcf;
+}

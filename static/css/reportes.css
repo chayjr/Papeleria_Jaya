@@ -1,0 +1,121 @@
+*{box-sizing:border-box;}
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    height:100vh;
+    background:#e6e6e6;
+}
+.container{
+    display:flex;
+    height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:300px;
+    background:#a7d46f;
+    padding:25px 20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+.sidebar button{
+    border:none;
+    padding:18px;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:3px;
+}
+.main-btn{background:#e5e5e5;}
+.menu-btn{
+    background:#22a9bc;
+    text-align:left;
+    padding-left:25px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.logout{background:#e5e5e5;}
+
+/* CONTENT */
+.content{
+    flex:1;
+    background:#d9d9d9;
+    padding:35px;
+}
+
+.title{
+    font-size:48px;
+    color:#5b73e8;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+/* BOTONES */
+.top-buttons{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+.top-buttons button{
+    border:none;
+    padding:15px 40px;
+    font-weight:600;
+    cursor:pointer;
+}
+.inv{background:#67c9d0;}
+.ven{background:#b9e47d;}
+.stock{background:#f19a5b;}
+
+/* FILTRO */
+.filter{
+    background:#cfcfcf;
+    padding:15px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+}
+.filter input{
+    padding:10px;
+    border:none;
+}
+.generate{
+    background:#9fc5cc;
+    padding:12px 20px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* TABLA */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th, td{
+    border:2px solid #222;
+    padding:12px;
+    text-align:center;
+}
+th{background:#cfcfcf;}
+
+.total{
+    text-align:right;
+    font-size:22px;
+    font-weight:600;
+    margin:15px 0;
+}
+
+.info{
+    margin-top:20px;
+}
+
+.icon{
+    font-size:20px;
+}
