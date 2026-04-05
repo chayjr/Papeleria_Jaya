@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papelería JAYA</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="left">
+        <div class="circle">
+            <h1>
+                <span>PAPELERIA</span>
+                <strong>JAYA</strong>
+            </h1>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="login-box">
+            <div class="avatar"></div>
+            <p>Inicie sesión para continuar</p>
+
+    
+            <form method="POST">
+
+                <div class="input-group">
+                    <input type="text" name="usuario" placeholder="Usuario" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
+
+                <button type="submit">Ingresar</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
