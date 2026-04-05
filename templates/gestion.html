@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Productos</title>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="title">PANEL PRINCIPAL</div>
+
+    <div class="menu">
+        <a href="/productos"><button>📦 PRODUCTOS</button></a>
+        <a href="/ventas"><button>🛒 VENTAS</button></a>
+        <a href="/reportes"><button>📖 REPORTES</button></a>
+        <a href="/usuarios"><button>👥 USUARIOS</button></a>
+    </div>
+
+    <div class="logout">
+        <a href="/logout"><button>CERRAR SESIÓN</button></a>
+    </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="content">
+    <h1>Gestión de Productos</h1>
+
+    <div class="actions">
+        <!-- 🔥 FORMULARIOS REALES -->
+        <form action="/agregar_producto" method="POST" style="display:inline;">
+            <button class="add">Agregar producto</button>
+        </form>
+
+        <form action="/editar_producto" method="POST" style="display:inline;">
+            <button class="edit">Editar producto</button>
+        </form>
+
+        <form action="/eliminar_producto" method="POST" style="display:inline;">
+            <button class="delete">Eliminar producto</button>
+        </form>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>PRECIO $</th>
+        </tr>
+
+
+        {% for p in productos %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.cantidad }}</td>
+            <td>{{ p.precio }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+</body>
+</html>
