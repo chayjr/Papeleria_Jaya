@@ -120,8 +120,7 @@ def nueva():
     return redirect("/ventas")
 
 
-
-
+#Lista los usuarios y los muestra en la tabla
 @app.route("/usuarios")
 def usuarios():
     conn = conectar()
@@ -134,7 +133,10 @@ def usuarios():
 
     return render_template("usuarios.html", usuarios=usuarios)
 
-
+#Ruta solo para acceder a la pagina de agregar usuarios
+@app.route("/agregar_usuario", methods=["POST"])
+def pagina_agregar():
+    return render_template ("agregar_usuario.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
