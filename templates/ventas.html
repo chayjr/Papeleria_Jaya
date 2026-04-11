@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="title">Ventas</div>
+
+    <!-- BUSCADOR (MISMO DISEÑO) -->
+    <div class="search-container">
+        <button class="btn blue">Buscar producto</button>
+        <input type="text" id="busqueda" placeholder="Buscar producto">
+        <button class="btn blue" id="btnAgregar">Agregar</button>
+    </div>
+
+    <!-- FORM OCULTO -->
+    <form id="formAgregar" action="/agregar" method="POST" style="display:none;">
+        <input type="hidden" name="producto" id="producto_id">
+        <input type="hidden" name="cantidad" id="cantidad">
+    </form>
+
+    <h3>Productos seleccionados</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>PRECIO $</th>
+            <th>SUBTOTAL</th>
+            <th>ELIMINAR</th>
+        </tr>
+
+        {% for item in carrito %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>$ {{ item.precio }}</td>
+            <td><b>$ {{ item.subtotal }}</b></td>
+            <td>
+                <a href="/eliminar/{{ loop.index0 }}">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="total">TOTAL: $ {{ total }}</div>
+
+    <div class="payment">
+        <b>Método de pago:</b><br><br>
+        <label><input type="radio"> Efectivo</label>
+    </div>
+
+    <div class="total">Subtotal: $ {{ total }}</div>
+
+    <div class="actionsv">
+
+        <a href="/guardar_venta">
+            <button class="btn green">Registrar venta</button>
+        </a>
+
+        <a href="/nueva">
+            <button class="btn orange">Cancelar venta</button>
+        </a>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+/* 🔹 CONTENIDO */
+.content {
+    flex: 1;
+    background: #ffffff;
+    padding: 35px;
+}
+
+.content h1 {
+     font-size:48px;
+    color:#5b73e8;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+/* boton de agregar producto */
+.actionsg {
+    margin: 20px 0;
+    display:flex;
+    gap:30px;
+    margin-top:20px;
+}
+
+.add { background: #5ecad0; }
+
+
+th, td {
+    border: 2px solid black;
+    padding: 20px;
+    text-align: center;
+}
+
+th {
+    background: #e7e7e7;
+}
+
+/* botones de editar y eliminar productos */
+.actionsga{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+}
+.editp { background: #bde48f; }
+.deletep { background: #f29b63; }

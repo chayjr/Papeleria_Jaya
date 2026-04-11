@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
+<div class="title">Reportes</div>
+
+
+    <!-- 🔥 FORM FILTRO -->
+    <form method="GET" action="/reportes" class="filter">
+        <label>Fecha inicio:</label>
+        <input type="date" name="inicio">
+
+        <label>Fecha fin:</label>
+        <input type="date" name="fin">
+
+        <button class="btn generate">Generar reporte</button>
+    </form>
+
+    <!-- TABLA -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>TOTAL</th>
+            <th>FECHA</th>
+            <th>ELIMINAR</th>
+        </tr>
+
+        {% for r in reportes %}
+        <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.nombre }}</td>
+            <td>{{ r.cantidad }}</td>
+            <td>$ {{ r.total }}</td>
+            <td>{{ r.fecha }}</td>
+            <td>
+                <div class="actionsr">
+                    <form action="/eliminar_reporte/{{ r.id }}" method="GET">
+                        <button class="btn eliminar">Eliminar</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="total">TOTAL: $ {{ total }}</div>
+
+    <div class="info">
+        <p><b>Total de ventas:</b> $ {{ total }}</p>
+        <p><b>Cantidad de ventas:</b> {{ cantidad }}</p>
+    </div>
+{% endblock %}

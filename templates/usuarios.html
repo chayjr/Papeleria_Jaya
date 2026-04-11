@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="title">Usuarios</div>
+
+<div class="actionsu">
+    <form action="/agregar_usuario" method="POST" style="display:inline;">
+        <button class="btn agregar">Agregar usuario</button>
+    </form>
+</div>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>NOMBRE</th>
+        <th>USUARIO</th>
+        <th>ROL</th>
+        <th>PRIVILEGIO</th>
+        <th>ACCIONES</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u.id_usuario }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.usuario }}</td>
+        <td>{{ u.id_rol }}</td>
+        <td>{{ u.id_privilegio }}</td>
+        <td>
+            <div class="actionsa">
+                <!-- Actualizar -->
+                <form action="/editar_usuario/{{ u.id }}" method="GET">
+                    <button class="btn editar">Editar</button>
+                </form>
+
+                <!-- Eliminar -->
+                <form action="/eliminar_usuario/{{ u.id }}" method="POST">
+                    <button class="btn eliminar"
+                            onclick="return confirm('¿Seguro que quieres eliminar este usuario?')">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

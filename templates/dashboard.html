@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class = "title">Dashboard general</div>
+<div class="dashboard-container">
+    <div class="card">
+        <h2>{{Productos}}</h2>
+        <span>Total de productos</span>
+    </div>
+
+    <div class="card">
+        <h2>{{ventas}}</h2>
+        <span>Ventas realizadas</span>
+    </div>
+
+    <div class="card">
+        <h2>{{Total}}</h2>
+        <span>Total de ventas</span>
+    </div>
+</div>
+
+<div class = "subtitle">Alertas de Stock</div>
+
+<div class="actions">
+    <form action="/actualizar" method="POST" style="display:inline;">
+        <button class="btn update">Actualizar Dashboard</button>
+    </form>
+
+    <form action="/bajo" method="POST" style="display:inline;">
+        <button class="btn low">Alertas de bajo stock</button>
+    </form>
+
+</div>
+{% endblock %}
