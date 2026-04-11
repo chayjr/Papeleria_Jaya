@@ -135,7 +135,7 @@ def usuarios():
 
 #Ruta solo para acceder a la pagina de agregar usuarios
 @app.route("/agregar_usuario", methods=["POST"])
-def pagina_agregar():
+def pagina_agregar_usuario():
     return render_template ("agregar_usuario.html")
 
 if __name__ == "__main__":
