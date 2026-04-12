@@ -126,8 +126,10 @@ def usuarios():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM usuario ORDER BY id_usuario DESC")
-    usuarios = cursor.fetchall()
+    cursor.callproc("mostrar_usuarios")
+    usuarios = []
+    for result in cursor.stored_results():
+        usuarios = result.fetchall()
 
     conn.close()
 
