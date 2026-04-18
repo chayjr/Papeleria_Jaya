@@ -61,6 +61,17 @@ def productos():
 
     return render_template("gestion.html", inventario=inventario)
 
+@app.route("/eliminar_producto/<int:id>", methods=["POST"])
+def eliminarproductos(id):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.callproc("eliminar_producto", [id])
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for("productos"))
+
 inventario = [
         {"id": 1, "nombre": "Cuaderno A5", "precio": 5.00, "stock": 10},
         {"id": 2, "nombre": "Lapicero Azul", "precio": 1.50, "stock": 25},
