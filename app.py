@@ -34,14 +34,14 @@ def pagina_agregar():
 @app.route("/agregar_productos", methods=["GET", "POST"])
 def agregarp():
     if request.method == "POST":
-        Nombre_producto = request.form["nombre", ""].strip()
-        Descripcion = request.form["descripcion", ""].strip()
+        Nombre_producto = request.form["nombre"].strip()
+        Descripcion = request.form["descripcion"].strip()
         Cantidad = int(request.form["cantidad"])
         Precio = Decimal(request.form["precio"])
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("INSERT INTO producto (nombre, descripción, cantidad, precio) VALUES (%s, %s, %s, %s)", (Nombre_producto, Descripcion, Cantidad, Precio))
+        cursor.execute("INSERT INTO producto (nombre, descripcion, cantidad, precio) VALUES (%s, %s, %s, %s)", (Nombre_producto, Descripcion, Cantidad, Precio))
         conn.commit()
         conn.close()
 
