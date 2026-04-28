@@ -20,12 +20,12 @@
 
     <table>
         <tr>
-            <th>ID</th>
-            <th>PRODUCTO</th>
-            <th>CANTIDAD</th>
-            <th>PRECIO $</th>
-            <th>SUBTOTAL</th>
-            <th>ELIMINAR</th>
+            <th>Id</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio $</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
         </tr>
 
         {% for item in carrito %}
@@ -43,7 +43,7 @@
 
     </table>
 
-    <div class="total">TOTAL: $ {{ total }}</div>
+    <div class="total">Total: $ {{ total }}</div>
 
     <div class="payment">
         <b>Método de pago:</b><br><br>
