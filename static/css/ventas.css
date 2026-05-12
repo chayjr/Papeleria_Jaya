@@ -94,3 +94,59 @@ th, td{
 .green{background:#9be064;}
 .orange{background:#f19a5b;}
 
+
+/* Darle formato al resultado del buscador*/
+#resultados{
+
+
+    max-height: 250px;
+    overflow-y: auto;
+
+}
+
+.resultado-item{
+
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+
+}
+
+.resultado-item form{
+
+    margin: 0;
+
+}
+
+.resultado-item button{
+
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: white;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+
+}
+
+.resultado-item button:hover{
+
+    background: #f0f7ff;
+
+}
+
+.search-container{
+
+    display: flex;
+    gap: 10px;
+
+}
+.search-container input{
+
+    flex: 1;
+
+}

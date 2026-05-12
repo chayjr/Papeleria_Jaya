@@ -4,14 +4,41 @@
 <div class="title">Ventas</div>
 
     <!-- BUSCADOR (MISMO DISEÑO) -->
-    <div class="search-container">
-        <button class="btn blue">Buscar producto</button>
-        <input type="text" id="busqueda" placeholder="Buscar producto">
-        <button class="btn blue" id="btnAgregar">Agregar</button>
+
+    <form action="/ventas" method="GET">
+
+        <div class="search-container">
+            <button class="btn blue">Buscar producto</button>
+            <input type="text" id="buscar" name="buscar" placeholder="Buscar producto">
+            <button class="btn blue" id="btnAgregar">Agregar</button>
+        </div>
+    </form>
+    <div id="resultados">
+
+    {% for producto in productos %}
+
+        <div class="resultado-item">
+
+            <form action="/agregar_producto_venta"
+              method="POST">
+
+                <input type="hidden" name="producto" value="{{ producto[0] }}">
+
+                <button type="submit">
+                    {{ producto[1] }}
+                    - ${{ producto[2] }}
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endfor %}
+
     </div>
 
     <!-- FORM OCULTO -->
-    <form id="formAgregar" action="/agregar" method="POST" style="display:none;">
+    <form id="formAgregar" action="/agregar_producto_venta" method="POST" style="display:none;">
         <input type="hidden" name="producto" id="producto_id">
         <input type="hidden" name="cantidad" id="cantidad">
     </form>
@@ -30,7 +57,7 @@
 
         {% for item in carrito %}
         <tr>
-            <td>{{ item.id }}</td>
+            <td>{{ item.id_producto }}</td>
             <td>{{ item.nombre }}</td>
             <td>{{ item.cantidad }}</td>
             <td>$ {{ item.precio }}</td>
