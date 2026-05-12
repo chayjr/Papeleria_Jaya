@@ -72,13 +72,8 @@ def eliminarproductos(id):
     conn.close()
     return redirect(url_for("productos"))
 
-#inventario = [
-#        {"id": 1, "nombre": "Cuaderno A5", "precio": 5.00, "stock": 10},
-#        {"id": 2, "nombre": "Lapicero Azul", "precio": 1.50, "stock": 25},
-#        {"id": 3, "nombre": "Marcador Permanente", "precio": 2.75, "stock": 15},
-#    ]
 
-# VENTAS
+#VENTAS
 venta_actual = []
 
 @app.route("/ventas")
@@ -90,7 +85,7 @@ def ventas():
 
     productos = []
 
-    # SI EL USUARIO ESCRIBIO ALGO
+    #Si el usuario escribio algo
     if texto != "":
 
         valor = f"%{texto}%"
@@ -111,29 +106,6 @@ def ventas():
     conn.close()
 
     return render_template("ventas.html",productos=productos,carrito=venta_actual,total=total)
-
-"""@app.route("/buscar_producto")
-def buscar_producto():
-    conn = conectar()
-    cursor = conn.cursor()
-
-    texto = request.args.get("texto","").lower()
-
-    valor = f"%{texto}%"
-    cursor.execute("SELECT id_producto, nombre, precio FROM producto WHERE nombre LIKE %s OR CAST(id_producto AS CHAR) LIKE %s LIMIT 10",(valor, valor))
-
-    productos = cursor.fetchall()
-    resultados = []
-
-    for producto in productos: 
-        resultados.append({
-            "id_producto":producto[0],
-            "nombre":producto[1],
-            "precio":float(producto[2])
-        })
-    cursor.close()
-    conn.close()
-    return jsonify(resultados)"""
 
 @app.route("/agregar_producto_venta", methods=["POST"])
 def agregar_productoaventa():
