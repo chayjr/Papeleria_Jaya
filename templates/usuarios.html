@@ -25,16 +25,16 @@
         <td>{{ u.nombre }}</td>
         <td>{{ u.usuario }}</td>
         <td>{{ u.rol }}</td>
-        <td>{{ u.privilegio }}</td>
+        <td>{{ u.privilegios }}</td>
         <td>
             <div class="actionsa">
                 <!-- Actualizar -->
-                <form action="/editar_usuario/{{ u.id }}" method="GET">
+                <form action="/editar_usuario/{{ u.id_usuario }}" method="GET">
                     <button class="btn editar">Editar</button>
                 </form>
 
                 <!-- Eliminar -->
-                <form action="/eliminar_usuario/{{ u.id }}" method="POST">
+                <form action="/eliminar_usuario/{{ u.id_usuario }}" method="POST">
                     <button class="btn eliminar"
                             onclick="return confirm('¿Seguro que quieres eliminar este usuario?')">
                         Eliminar

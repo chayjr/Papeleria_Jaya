@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class = "title">Dashboard general</div>
+<div class = "title">Panel general</div>
 <div class="dashboard-container">
     <div class="card">
         <h2>{{Productos}}</h2>
@@ -22,13 +22,40 @@
 <div class = "subtitle">Alertas de Stock</div>
 
 <div class="actions">
-    <form action="/actualizar" method="POST" style="display:inline;">
-        <button class="btn update">Actualizar Dashboard</button>
+    <form action="/dashboard" style="display:inline;">
+        <button class="btn update">Actualizar Panel Principal</button>
     </form>
 
-    <form action="/bajo" method="POST" style="display:inline;">
+    <form action="/bajo_stock" method="POST" style="display:inline;">
         <button class="btn low">Alertas de bajo stock</button>
     </form>
 
 </div>
+
+{% if bajos %}
+
+<table>
+
+    <tr>
+        <th>Id</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+    </tr>
+
+    {% for p in bajos %}
+
+    <tr class="{% if p.cantidad <= 2%} critico {% else %} advertencia {% endif %}">
+        <td>{{ p.id_producto }}</td>
+
+        <td>{{ p.nombre }}</td>
+
+        <td>{{ p.cantidad }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
 {% endblock %}

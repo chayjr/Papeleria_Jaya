@@ -7,6 +7,56 @@ import secrets
 from conexion import conectar
 sesion_bp = Blueprint('sesion', __name__)
 
+#Decorador para proteger login y rutas con privilegios
+from functools import wraps
+from flask import session, redirect
+
+def requiere_privilegio(nombre_privilegio):
+    def decorator(func):
+        @wraps(func)
+        def envoltura(*args, **kwargs):
+            # VALIDAR LOGIN
+            if "id_usuario" not in session:
+                return redirect("/")
+
+            conn = conectar()
+            cursor = conn.cursor(dictionary=True)
+
+            cursor.execute("""
+                SELECT privilegio.nombre
+
+                FROM usuario_privilegio
+
+                INNER JOIN privilegio
+                ON usuario_privilegio.id_privilegio = privilegio.id_privilegio
+
+                WHERE usuario_privilegio.id_usuario = %s
+            """, (
+                session["id_usuario"],
+            ))
+
+            privilegios = cursor.fetchall()
+
+            conn.close()
+
+            lista_privilegios = []
+
+            for p in privilegios:
+                lista_privilegios.append(p["nombre"])
+
+            #administrador
+            if "Todos" in lista_privilegios:
+                return func(*args, **kwargs)
+
+            #privilegio especifico
+            if nombre_privilegio in lista_privilegios:
+                return func(*args, **kwargs)
+            return """
+                <h1>No tienes acceso</h1>
+            """
+        return envoltura
+    return decorator
+
 
 #Ruta para loguarte a la hora de entrar al sistema
 @sesion_bp.route("/", methods=["GET","POST"])

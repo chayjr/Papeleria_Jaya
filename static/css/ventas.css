@@ -150,3 +150,19 @@ th, td{
     flex: 1;
 
 }
+
+/* oculta formulario hasta seleccionar efectivo */
+.form-efectivo{
+    display: none;
+    margin-top: 15px;
+}
+
+/* Mostrar cuando el radio esté seleccionado */
+#efectivo:checked ~ .form-efectivo{
+    display: block;
+}
+
+.eliminarven{
+    background:#f29b63;
+}
+

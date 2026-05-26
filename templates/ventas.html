@@ -3,19 +3,17 @@
 {% block content %}
 <div class="title">Ventas</div>
 
-    <!-- BUSCADOR (MISMO DISEÑO) -->
-
     <form action="/ventas" method="GET">
 
         <div class="search-container">
             <button class="btn blue">Buscar producto</button>
-            <input type="text" id="buscar" name="buscar" placeholder="Buscar producto">
+            <input type="text" id="buscar" name="buscar" placeholder="Buscar producto por Id o nombre">
             <button class="btn blue" id="btnAgregar">Agregar</button>
         </div>
     </form>
     <div id="resultados">
 
-    {% for producto in productos %}
+    {% for producto in productosc %}
 
         <div class="resultado-item">
 
@@ -63,7 +61,11 @@
             <td>$ {{ item.precio }}</td>
             <td><b>$ {{ item.subtotal }}</b></td>
             <td>
-                <a href="/eliminar/{{ loop.index0 }}">🗑️</a>
+                <div class="actionsven">
+                    <form action="/eliminar/{{ loop.index0 }}" method="GET">
+                        <button class="btn eliminarven">Eliminar</button>
+                    </form>
+                </div>
             </td>
         </tr>
         {% endfor %}
@@ -72,25 +74,72 @@
 
     <div class="total">Total: $ {{ total }}</div>
 
-    <div class="payment">
-        <b>Método de pago:</b><br><br>
-        <label><input type="radio"> Efectivo</label>
-    </div>
+        <div class="payment">
+            <b>Método de pago:</b><br><br>
+            <input type="radio" id="efectivo" name="metodo_pago" {% if cambio is defined %} checked {% endif %}>
+            <label for="efectivo">Efectivo</label>
 
-    <div class="total">Subtotal: $ {{ total }}</div>
+            <div class="form-efectivo">
 
-    <div class="actionsv">
+                <form action="/calcular_cambio" method="POST">
 
-        <a href="/guardar_venta">
-            <button class="btn green">Registrar venta</button>
-        </a>
+                    <input type="hidden" name="total" value="{{ total }}">
 
-        <a href="/nueva">
-            <button class="btn orange">Cancelar venta</button>
-        </a>
+                    <input type="number"
+                        name="pago"
+                        step="0.01"
+                        required
+                        min="0"
+                        placeholder="Cantidad recibida">
 
+                    {% if error %}
+                        <div style="color:red;">
+                            {{ error }}
+                        </div>
+                    {% endif %}
 
-    </div>
+                    <button class="btn blue" type="submit">
+                        Calcular cambio
+                    </button>
+
+                    {% if cambio is defined %}
+                        <div class="total">Subtotal: $ {{ total }}</div>
+                        <div class="total">
+                            Pago: $ {{ pago }}
+                        </div>
+
+                        <div class="total">
+                            Cambio: $ {{ cambio }}
+                        </div>
+                    {% endif %}
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="actionsv">
+            <form action="/guardar_venta" method="post">
+                <input type="hidden" name="total" value="{{ total }}">
+
+                <input type="hidden" name="pago" value="{{ pago if pago is defined else 0}}">
+
+                <input type="hidden" name="cambio" value="{{ cambio if cambio is defined else 0}}">
+
+                <input type="hidden"
+                name="metodo_pago"
+                value="Efectivo">
+                <button class="btn green">
+                    Registrar venta
+                </button>
+            </form>
+
+            <a href="/nueva">
+                <button class="btn orange">Cancelar venta</button>
+            </a>
+
+        </div>
 
 </div>
 

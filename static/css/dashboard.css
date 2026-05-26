@@ -45,3 +45,15 @@
     border-radius:6px;
     text-align:left;
 }
+
+/* STOCK BAJO */
+.advertencia td{
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* STOCK CRÍTICO */
+.critico td{
+    background-color: #f8d7da;
+    color: #c32434;
+}

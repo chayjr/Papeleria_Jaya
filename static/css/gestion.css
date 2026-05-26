@@ -79,7 +79,7 @@ th {
 }
 
 .campo input {
-    width: 80%;
+    width: 100%;
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
