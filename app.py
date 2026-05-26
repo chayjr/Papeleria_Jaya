@@ -448,5 +448,85 @@ def guardar_usuario():
 
     return redirect("/usuarios")
 
+#Actualizar el usuario
+#Mostrar lo guardado en la base de datos del usuario
+@app.route("/editar_usuario/<int:id_usuario>")
+@requiere_privilegio("Usuarios")
+def editar_usuario(id_usuario):
+
+    conn = conectar()
+    cursor = conn.cursor(dictionary=True)
+
+    #Datos del usuario
+    cursor.execute("""
+        SELECT *FROM usuario
+        WHERE id_usuario = %s
+    """, (id_usuario,))
+
+    usuario = cursor.fetchone()
+
+    #Roles
+    cursor.execute("SELECT *FROM rol")
+
+    roles = cursor.fetchall()
+
+    #Privilegios
+    cursor.execute("SELECT *FROM privilegio")
+
+    privilegios = cursor.fetchall()
+
+    #Muestra privilegios actuales
+    cursor.execute("""
+        SELECT id_privilegio
+        FROM usuario_privilegio
+        WHERE id_usuario = %s
+    """, (id_usuario,))
+
+    privilegios_usuario = cursor.fetchall()
+
+    conn.close()
+
+    #Lista de los privilegios marcados
+    privilegios_marcados = []
+
+    for p in privilegios_usuario:
+        privilegios_marcados.append(p["id_privilegio"])
+
+    return render_template("actualizar_usuario.html",usuario=usuario,roles=roles,privilegios=privilegios,privilegios_marcados=privilegios_marcados)
+
+#Actualiza los datos y los inserta en la base de datos
+@app.route("/actualizar_usuario/<int:id_usuario>", methods=["POST"])
+@requiere_privilegio("Usuarios")
+def actualizar_usuario(id_usuario):
+
+    nombre = request.form["nombre"]
+    usuario = request.form["usuario"]
+    id_rol = request.form["id_rol"]
+
+    privilegios = request.form.getlist("privilegios")
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    #Actualiza los datos del usuario
+    cursor.execute("""
+        UPDATE usuario
+        SET nombre = %s,usuario = %s,id_rol = %s
+        WHERE id_usuario = %s
+    """, (nombre,usuario,id_rol,id_usuario))
+
+    #Elimina los privilegios viejos
+    cursor.execute("DELETE FROM usuario_privilegio WHERE id_usuario = %s", (id_usuario,))
+
+    #Aqui inserta los nuevos
+    for id_privilegio in privilegios:
+
+        cursor.execute("INSERT INTO usuario_privilegio (id_usuario, id_privilegio) VALUES(%s,%s)", (id_usuario,id_privilegio))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/usuarios")
+
 if __name__ == "__main__":
     app.run(debug=True)

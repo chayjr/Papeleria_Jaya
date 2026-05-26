@@ -51,9 +51,7 @@ def requiere_privilegio(nombre_privilegio):
             #privilegio especifico
             if nombre_privilegio in lista_privilegios:
                 return func(*args, **kwargs)
-            return """
-                <h1>No tienes acceso</h1>
-            """
+            return render_template("acceso_denegado.html")
         return envoltura
     return decorator
 

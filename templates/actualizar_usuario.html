@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="formulario">
+   <div class="title">Agregar usuario</div>
+    <form action="/actualizar_usuario/{{ usuario.id_usuario }}" method="POST">
+        <div class="campo">
+            <label>Nombre del nuevo usuario:</label>
+            <input type="text" name="nombre" value="{{ usuario.nombre }}" required>
+        </div>
+
+        <div class="campo">
+            <label>Usuario:</label>
+            <input type="text" name="usuario" id="usuario" value="{{ usuario.usuario }}" required>
+        </div>
+
+        <div class="campo">
+            <label>Rol:</label>
+            <select name="id_rol" id="rol_select">
+                {% for rol in roles %}
+                <option value="{{ rol.id_rol }}" {% if rol.id_rol == usuario.id_rol%} selected {% endif %}> {{ rol.nombre_rol}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="campo">
+            <label>Permisos:</label>
+            <div class="privilegios">
+                {% for privilegio in privilegios %}
+                <label class="check_priv">
+                    <input type="checkbox" name="privilegios" value="{{ privilegio.id_privilegio}}" {% if privilegio.id_privilegio in privilegios_marcados %} checked {% endif %}> 
+                    <span>{{ privilegio.nombre }}</span>
+                </label>
+                {% endfor%}
+            </div>
+        </div>
+
+        <div class="actionsp">
+                <button class="btn guardar" style="display:inline;">Guardar usuario</button>
+                <a href="/usuarios" class="btn cancelar">Cancelar</a>
+        </div>
+
+
+    </form>
+</div>
+{% endblock %}
