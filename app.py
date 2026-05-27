@@ -4,8 +4,10 @@ from flask import Blueprint, Flask, render_template,request, session,url_for,red
 from conexion import conectar
 from login import sesion_bp ,requiere_privilegio
 from werkzeug.security import generate_password_hash
+from datetime import timedelta
 
 app = Flask (__name__)
+app.permanent_session_lifetime = timedelta(minutes=15)
 app.secret_key = "david"
 
 app.register_blueprint(sesion_bp)
