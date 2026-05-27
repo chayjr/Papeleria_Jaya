@@ -213,7 +213,7 @@ def agregar_productoaventa():
                     "cantidad":1,
                     "subtotal":float(producto[2]),
                 }) 
-
+                flash("Producto agregado a la venta","warning")
     return redirect("/ventas")
 
 @app.route("/calcular_cambio", methods=["POST"])
@@ -296,6 +296,7 @@ def guardar_venta():
 @app.route("/nueva") 
 def nueva():
     venta_actual.clear()
+    flash("Venta cancelada correctamente","warning")
     return redirect("/ventas")
 
 #Reportes
@@ -360,7 +361,7 @@ def reportes():
 
     cursor.close()
     conn.close()
-
+    flash("Reporte generado correctamente","success")
     return render_template("reportes.html", reportes=reportes, total=total, cantidad=cantidad)
 
 # ELIMINAR
@@ -422,29 +423,20 @@ def guardar_usuario():
         INSERT INTO usuario
         (nombre, usuario, contrasena, id_rol)
         VALUES(%s,%s,%s,%s)
-    """, (
-        nombre,
-        usuario,
-        contrasena,
-        id_rol
-    ))
+    """, (nombre,usuario,contrasena,id_rol))
 
     conn.commit()
-
-    # ID DEL NUEVO USUARIO
+    #id del usuario
     id_usuario = cursor.lastrowid
 
-    # GUARDAR PRIVILEGIOS
+    #Guardar privilegios
     for id_privilegio in privilegios:
 
         cursor.execute("""
             INSERT INTO usuario_privilegio
             (id_usuario, id_privilegio)
             VALUES(%s,%s)
-        """, (
-            id_usuario,
-            id_privilegio
-        ))
+        """, (id_usuario,id_privilegio))
 
     conn.commit()
     conn.close()
@@ -470,12 +462,10 @@ def editar_usuario(id_usuario):
 
     #Roles
     cursor.execute("SELECT *FROM rol")
-
     roles = cursor.fetchall()
 
     #Privilegios
     cursor.execute("SELECT *FROM privilegio")
-
     privilegios = cursor.fetchall()
 
     #Muestra privilegios actuales

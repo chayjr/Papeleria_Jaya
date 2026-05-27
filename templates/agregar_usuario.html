@@ -45,8 +45,6 @@
                 <button class="btn guardar" style="display:inline;">Guardar usuario</button>
                 <a href="/usuarios" class="btn cancelar">Cancelar</a>
         </div>
-
-
     </form>
 </div>
 
@@ -61,12 +59,12 @@ const checks = document.querySelectorAll(
 
 rol.addEventListener("change", function(){
 
-    // SI ES ADMIN
+    //si es admin
     if(this.value == "1"){
 
         checks.forEach(check => {
 
-            // SOLO PRIVILEGIO TODOS
+            //Solo privilegio todos
             if(check.value == "1"){
 
                 check.checked = true;
@@ -83,7 +81,7 @@ rol.addEventListener("change", function(){
 
     }
 
-    // SI ES EMPLEADO
+    //Si es empelado
     else{
 
         checks.forEach(check => {
@@ -97,7 +95,7 @@ rol.addEventListener("change", function(){
 
 });
 
-// EJECUTAR AL CARGAR
+//ejecutar al cargar
 rol.dispatchEvent(new Event("change"));
 
 </script>

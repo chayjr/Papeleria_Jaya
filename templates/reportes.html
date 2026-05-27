@@ -23,7 +23,6 @@
             <th>Cantidad</th>
             <th>Total</th>
             <th>Fecha</th>
-            <th>Acciones</th>
         </tr>
 
         {% for r in reportes %}
@@ -33,13 +32,13 @@
             <td>{{ r.cantidad }}</td>
             <td>$ {{ r.total }}</td>
             <td>{{ r.fecha }}</td>
-            <td>
+            <!--<td>
                 <div class="actionsr">
                     <form action="/eliminar_reporte/{{ r.id }}" method="GET">
                         <button class="btn eliminar">Eliminar</button>
                     </form>
                 </div>
-            </td>
+            </td>-->
         </tr>
         {% endfor %}
 

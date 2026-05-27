@@ -86,8 +86,10 @@ def home ():
             session["token"] = token
 
             if usuario_db["id_rol"] == 1:
+                flash("Bienvenido al sistema","success")
                 return redirect(url_for("dashboard"))
             else: 
+                flash("Bienvenido al sistema","success")
                 return redirect(url_for("productos"))
         else: 
             flash ("Usuario o contraseña incorrectos","error")
@@ -112,4 +114,5 @@ def logout():
         conn.close()
 
     session.clear()
+    flash("Sesión cerrada correctamente","success")
     return redirect(url_for("sesion.home")) 
