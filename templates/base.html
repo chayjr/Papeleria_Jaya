@@ -55,11 +55,43 @@
             </ul>
         </aside>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mensajeg {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
        <!-- CONTENIDO -->
     <div class="content">
         {% block content %}
         {% endblock %}
     </div>
+    <script>
+
+    setTimeout(() => {
+
+        document.querySelectorAll(".mensajeg")
+        .forEach(alerta => {
+
+            alerta.style.opacity = "0";
+
+            alerta.style.transform =
+                "translate(-50%, -20px)";
+
+            setTimeout(() => {
+
+                alerta.remove();
+
+            }, 500);
+
+        });
+
+    }, 3000);
+
+    </script>
 </body>
 </html>

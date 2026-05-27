@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from flask import Blueprint, Flask, render_template,request, session,url_for,redirect,jsonify
+from flask import Blueprint, Flask, render_template,request, session,url_for,redirect,jsonify,flash
 from conexion import conectar
 from login import sesion_bp ,requiere_privilegio
 from werkzeug.security import generate_password_hash
@@ -78,6 +78,7 @@ def agregarp():
         cursor.execute("INSERT INTO producto (nombre, descripcion, cantidad, precio) VALUES (%s, %s, %s, %s)", (Nombre_producto, Descripcion, Cantidad, Precio))
         conn.commit()
         conn.close()
+        flash("Producto agregado correctamente", "success")
 
         return redirect(url_for("productos"))
     return render_template ("gestion.html")
@@ -89,7 +90,7 @@ def productos():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM producto ORDER BY id_producto DESC")
+    cursor.execute("SELECT * FROM producto WHERE estado = 1 ORDER BY id_producto DESC")
     inventario = cursor.fetchall()
 
     conn.close()
@@ -120,7 +121,7 @@ def actualizar_producto(id):
 
         conn.commit()
         conn.close()
-
+        flash("Producto actualizado correctamente","success")
         return redirect(url_for("productos"))
 
     #Mostrar datos actuales del producto
@@ -128,9 +129,9 @@ def actualizar_producto(id):
     producto = cursor.fetchone()
 
     conn.close()
-
     return render_template("actualizar_producto.html", producto=producto)
 
+#Eliminar un producto del sistema, solo se elimina logicamente
 @app.route("/eliminar_producto/<int:id>", methods=["POST"])
 def eliminarproductos(id):
     conn = conectar()
@@ -140,10 +141,11 @@ def eliminarproductos(id):
     
     conn.commit()
     conn.close()
+    flash ("Producto eliminado correctamente","danger")
     return redirect(url_for("productos"))
 
 
-#VENTAS
+#Ventas
 venta_actual = []
 
 @app.route("/ventas")
@@ -234,7 +236,7 @@ def cambio_calculado():
 
     return render_template("ventas.html", total=total, pago=pago, cambio=cambio, productoc=productosc, carrito=venta_actual, metodo_pago="Efectivo")
 
-# Guardar venta
+#Guardar venta
 @app.route("/guardar_venta",methods=["POST"])
 @requiere_privilegio("Ventas")
 def guardar_venta():
@@ -272,7 +274,7 @@ def guardar_venta():
             item["subtotal"]
         ))
 
-        # DESCONTAR STOCK
+        #Descuenta del stock
         cursor.execute("""
             UPDATE producto
             SET cantidad = cantidad - %s
@@ -287,15 +289,16 @@ def guardar_venta():
     cursor.close()
     conn.close()
     venta_actual.clear()
+    flash("Venta realizada correctamente","success")
     return redirect("/ventas")
 
-# NUEVA
+#Limpiar la venta
 @app.route("/nueva") 
 def nueva():
     venta_actual.clear()
     return redirect("/ventas")
 
-# REPORTES
+#Reportes
 @app.route("/reportes")
 @requiere_privilegio("Reportes")
 def reportes():
@@ -337,7 +340,7 @@ def reportes():
         resumen = cursor.fetchone()
 
     else:
-        # PROCEDURE REPORTES
+        #Procedure de reportes
         cursor.callproc("obtener_reportes", [inicio, fin])
 
         for resultado in cursor.stored_results():
@@ -346,7 +349,7 @@ def reportes():
         cursor.close()
         cursor = conn.cursor(dictionary=True)
 
-        # PROCEDURE RESUMEN
+        #Procedure del resumen
         cursor.callproc("resumen_reportes", [inicio, fin])
 
         for resultado in cursor.stored_results():
@@ -445,7 +448,7 @@ def guardar_usuario():
 
     conn.commit()
     conn.close()
-
+    flash("Usuario agregado correctamente","success")
     return redirect("/usuarios")
 
 #Actualizar el usuario
@@ -525,8 +528,21 @@ def actualizar_usuario(id_usuario):
 
     conn.commit()
     conn.close()
-
+    flash("Usuario actualizado correctamente","success")
     return redirect("/usuarios")
+
+#Eliminar un usuario tambien de manera logica
+@app.route("/eliminar_usuario/<int:id>", methods=["POST"])
+def eliminarusuarios(id):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.callproc("eliminar_usuario", [id])
+    
+    conn.commit()
+    conn.close()
+    flash("Usuario elimando correctamente","danger")
+    return redirect(url_for("usuarios"))
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -148,3 +148,62 @@ table {
         overflow-x: auto;
     }
 }
+
+.mensajeg{
+    position: fixed;
+    top: 20px;
+    left: 650px;
+    transform: translateX(-50);
+    z-index: 99999;
+    min-width: 320px;
+    max-width: 400px;
+    padding: 16px 22px;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+    animation: mostrarToast 0.3s ease;
+    opacity: 1;
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+}
+
+/* SUCCESS */
+.mensajeg.success{
+    background: #2ecc71;
+}
+
+/* ERROR */
+.mensajeg.error{
+    background: #e74c3c;
+}
+/* WARNING */
+.mensajeg.warning{
+    background: #f39c12;
+}
+
+/* INFO */
+.mensajeg.info{
+    background: #3498db;
+}
+
+/* DANGER */
+.mensajeg.danger{
+    background: #c0392b;
+}
+
+@keyframes mostrarToast{
+
+    from{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+

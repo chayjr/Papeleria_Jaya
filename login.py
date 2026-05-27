@@ -65,21 +65,15 @@ def home ():
 
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute ("SELECT * FROM usuario WHERE usuario = %s", (usuario,))
+        cursor.execute ("SELECT * FROM usuario WHERE BINARY usuario = %s", (usuario,))
         usuario_db = cursor.fetchone()
 
         #Verifica usuario y contraseña
         if usuario_db and check_password_hash(usuario_db["contrasena"],password):
-            if "token" in session:
-                cursor.execute("SELECT sesion_token FROM usuario WHERE id_usuario = %s", (session["id_usuario"],))
-                usuario_token = cursor.fetchone()
-
-                #Verifica que el token de la base sea nula
-                if usuario_token and usuario_token["sesion_token"] == session["token"]:
-                    flash ("Este usuario se encuentra activo")
-                    return render_template("base_login.html")
-                else:
-                    session.clear()
+            if usuario_db["sesion_token"] is not None:
+                flash("Este usuario ya tiene sesión activa","warning")
+                conn.close()
+                return render_template("base_login.html")
             #Genera token 
             token = secrets.token_hex(32)
             #Guarda token y ultima actividad en la base de datos
