@@ -70,6 +70,16 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <!-- LOADER -->
+    <div id="loader">
+
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+
+    </div>
     <script>
 
     setTimeout(() => {
@@ -91,6 +101,58 @@
         });
 
     }, 3000);
+
+    </script>
+
+    <script>
+
+    function mostrarLoader(event, url=null, form=null){
+
+        event.preventDefault();
+
+        // Mostrar loader
+        document.getElementById("loader").classList.add("active");
+
+        // Esperar 1.5 segundos
+        setTimeout(() => {
+
+            if(url){
+                window.location.href = url;
+            }
+
+            if(form){
+                form.submit();
+            }
+
+        }, 700);
+
+    }
+
+
+    // LINKS
+    document.querySelectorAll("a").forEach(link => {
+
+        link.addEventListener("click", function(event){
+
+            const url = this.href;
+
+            mostrarLoader(event, url);
+
+        });
+
+    });
+
+
+    // FORMULARIOS
+    document.querySelectorAll("form").forEach(form => {
+
+        form.addEventListener("submit", function(event){
+
+            mostrarLoader(event, null, form);
+
+        });
+
+    });
 
     </script>
 </body>

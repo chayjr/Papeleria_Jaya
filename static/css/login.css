@@ -146,6 +146,14 @@ button:hover {
     color: rgb(182, 21, 21);
 }
 
+.mensaje.info {
+    color: rgb(44, 81, 245);
+}
+
+.mensaje.warning {
+    color: rgba(245, 134, 8, 0.986);
+}
+
 @keyframes aparecer {
     from {
         opacity: 0;

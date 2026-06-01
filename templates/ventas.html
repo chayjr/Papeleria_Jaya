@@ -20,11 +20,12 @@
             <form action="/agregar_producto_venta"
               method="POST">
 
-                <input type="hidden" name="producto" value="{{ producto[0] }}">
+                <input type="hidden" name="producto" value="{{ producto['id_producto'] }}">
 
                 <button type="submit">
-                    {{ producto[1] }}
-                    - ${{ producto[2] }}
+                    {{ producto["id_producto"] }}
+                    -{{ producto["nombre"] }}
+                    - ${{ producto["precio"] }}
                 </button>
 
             </form>

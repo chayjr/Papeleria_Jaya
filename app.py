@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 from datetime import timedelta
 
 app = Flask (__name__)
-app.permanent_session_lifetime = timedelta(minutes=15)
+app.permanent_session_lifetime = timedelta(minutes=10)
 app.secret_key = "david"
 
 app.register_blueprint(sesion_bp)
@@ -148,13 +148,15 @@ def eliminarproductos(id):
 
 
 #Ventas
-venta_actual = []
-
 @app.route("/ventas")
 @requiere_privilegio("Ventas")
 def ventas():
+
+    if "venta_actual" not in session:
+        session["venta_actual"] = []
+
     conn = conectar()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
     texto = request.args.get("buscar", "")
 
@@ -175,106 +177,139 @@ def ventas():
 
         productosc = cursor.fetchall()
 
-    total = sum(item["subtotal"] for item in venta_actual)
+    carrito = session.get("venta_actual",[])
+
+    total = sum(item["subtotal"] for item in carrito)
 
     cursor.close()
     conn.close()
 
-    return render_template("ventas.html",productosc=productosc,carrito=venta_actual,total=total)
+    return render_template("ventas.html",productosc=productosc,carrito=carrito,total=total)
 
 @app.route("/agregar_producto_venta", methods=["POST"])
 @requiere_privilegio("Ventas")
 def agregar_productoaventa():
     conn = conectar()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
     producto_id = request.form["producto"]
-    cursor.execute("SELECT id_producto, nombre, precio FROM producto WHERE id_producto = %s", (producto_id,))
+    cursor.execute("SELECT id_producto, nombre, precio, cantidad FROM producto WHERE id_producto = %s", (producto_id,))
 
     producto = cursor.fetchone()
 
     cursor.close()
     conn.close()
+    carrito = session.get("venta_actual",[])
 
     if producto :
         existe = False
 
-        for item in venta_actual:
-            if item["id_producto"] == producto[0]:
+        for item in carrito:
+            if item["id_producto"] == producto["id_producto"]:
+                if item["cantidad"] >= producto["cantidad"]:
+                    flash(f"No hay más unidades disponibles de {producto['nombre']}","error")
+                    return redirect("/ventas")
+                
                 item["cantidad"] += 1
 
-                item["subtotal"] = (item["cantidad"]* item["precio"]
-                ) 
+                item["subtotal"] = (item["cantidad"]* item["precio"]) 
                 existe = True
                 break
         if not existe:
-                venta_actual.append({
-                    "id_producto":producto[0],
-                    "nombre":producto[1],
-                    "precio":float(producto[2]),
-                    "cantidad":1,
-                    "subtotal":float(producto[2]),
-                }) 
-                flash("Producto agregado a la venta","warning")
+            if producto["cantidad"] <= 0:
+                flash(f"{producto['nombre']} no tiene existencias","error")
+                return redirect("/ventas")
+            
+            carrito.append({
+                "id_producto":producto["id_producto"],
+                "nombre":producto["nombre"],
+                "precio":float(producto["precio"]),
+                "cantidad":1,
+                "subtotal":float(producto["precio"]),
+            }) 
+        session["venta_actual"] = carrito
+        session.modified = True
+        flash("Producto agregado a la venta","warning")
+        
     return redirect("/ventas")
 
 @app.route("/calcular_cambio", methods=["POST"])
 @requiere_privilegio("Ventas")
 def cambio_calculado():
+
+    carrito = session.get("venta_actual",[])
     total = float(request.form["total"])
     pago_texto = request.form ["pago"]
 
     productosc = []
     if pago_texto == "":
-        return render_template("ventas.html", total=total, productoc=productosc, carrito=venta_actual, error="Ingrese una cantidad")
+        return render_template("ventas.html", total=total, productoc=productosc, carrito=carrito, error="Ingrese una cantidad")
     pago = float(pago_texto)
 
     if pago < 0:
-        return render_template("ventas.html", total=total, productoc=productosc, carrito=venta_actual, error="No se permiten números negativos")
+        return render_template("ventas.html", total=total, productoc=productosc, carrito=carrito, error="No se permiten números negativos")
     if pago < total:
-        return render_template("ventas.html", total=total, pago=pago, productoc=productosc, carrito=venta_actual, error="La cantidad ingresada es insuficiente")
+        return render_template("ventas.html", total=total, pago=pago, productoc=productosc, carrito=carrito, error="La cantidad ingresada es insuficiente")
 
     cambio = pago - total
 
-    return render_template("ventas.html", total=total, pago=pago, cambio=cambio, productoc=productosc, carrito=venta_actual, metodo_pago="Efectivo")
+    return render_template("ventas.html", total=total, pago=pago, cambio=cambio, productosc=productosc, carrito=carrito, metodo_pago="Efectivo")
 
 #Guardar venta
 @app.route("/guardar_venta",methods=["POST"])
 @requiere_privilegio("Ventas")
 def guardar_venta():
-    if len(venta_actual) == 0:
+    carrito = session.get("venta_actual",[])
+    if len(carrito) == 0:
         return redirect("/ventas")
 
     conn = conectar()
-    cursor = conn.cursor()
 
-    total = float(request.form["total"])
-    pago = float(request.form["pago"])
-    cambio = float(request.form["cambio"])
-    metodo_pago = request.form["metodo_pago"]
+    try:
+        conn.start_transaction()
+        cursor = conn.cursor(dictionary=True)
 
-    id_usuario = 1
-    cursor.execute("""INSERT INTO venta(fecha,total,id_usuario,metodo_pago,efectivo_recibido,cambio) VALUES (CURDATE(),%s,%s,%s,%s,%s)
-    """, 
-    (
-        total,
-        id_usuario,
-        metodo_pago,
-        pago,
-        cambio
-    ))
-    conn.commit()
+        total = float(request.form["total"])
+        pago = float(request.form["pago"])
+        cambio = float(request.form["cambio"])
+        metodo_pago = request.form["metodo_pago"]
 
-    id_venta = cursor.lastrowid
-    for item in venta_actual:
+        id_usuario = session["id_usuario"]
 
-        cursor.execute("""INSERT INTO item_venta(id_venta,id_producto,cantidad,subtotal)VALUES(%s,%s,%s,%s)
-        """, (
-            id_venta,
-            item["id_producto"],
-            item["cantidad"],
-            item["subtotal"]
+        for item in carrito:
+            cursor.execute("SELECT cantidad FROM producto WHERE id_producto =%s FOR UPDATE",(item["id_producto"], ))
+            producto = cursor.fetchone()
+
+            if not producto:
+                conn.rollback()
+                flash(f"El producto {item["nombre"]} ya no existe","error")
+                return redirect("/ventas")
+            
+            if producto["cantidad"] < item["cantidad"]:
+                conn.rollback()
+                flash(f"Stock insuficiente para {item["nombre"]}." f" Disponibles: {producto["cantidad"]}","error")
+                return redirect("/ventas")
+            
+        cursor.execute("""INSERT INTO venta(fecha,total,id_usuario,metodo_pago,efectivo_recibido,cambio) VALUES (CURDATE(),%s,%s,%s,%s,%s)
+        """, 
+        (
+            total,
+            id_usuario,
+            metodo_pago,
+            pago,
+            cambio
         ))
+
+        id_venta = cursor.lastrowid
+        for item in carrito:
+
+            cursor.execute("""INSERT INTO item_venta(id_venta,id_producto,cantidad,subtotal)VALUES(%s,%s,%s,%s)
+            """, (
+                id_venta,
+                item["id_producto"],
+                item["cantidad"],
+                item["subtotal"]
+            ))
 
         #Descuenta del stock
         cursor.execute("""
@@ -286,20 +321,39 @@ def guardar_venta():
             item["id_producto"]
         ))
 
-    conn.commit()
+        conn.commit()
+        session["venta_actual"] = []
+        cursor.close()
+        flash("Venta realizada correctamente","success")
+        return redirect("/ventas")
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error al registrar la venta: {str(e)}","error")
+        return redirect("/ventas")
+    finally:
+        cursor.close()
+        conn.close()
 
-    cursor.close()
-    conn.close()
-    venta_actual.clear()
-    flash("Venta realizada correctamente","success")
-    return redirect("/ventas")
 
 #Limpiar la venta
 @app.route("/nueva") 
 def nueva():
-    venta_actual.clear()
+    session["venta_actual"] = []
     flash("Venta cancelada correctamente","warning")
     return redirect("/ventas")
+
+# ELIMINAR
+@app.route("/eliminar/<int:index>")
+def eliminar(index):
+    carrito = session.get("venta_actual",[])
+
+    if  0 <= index < len(carrito):
+        carrito.pop(index)
+
+    session["venta_actual"] = carrito
+    session.modified = True
+    return redirect("/ventas")
+
 
 #Reportes
 @app.route("/reportes")
@@ -365,13 +419,6 @@ def reportes():
     conn.close()
     flash("Reporte generado correctamente","success")
     return render_template("reportes.html", reportes=reportes, total=total, cantidad=cantidad)
-
-# ELIMINAR
-@app.route("/eliminar/<int:index>")
-def eliminar(index):
-    venta_actual.pop(index)
-    return redirect("/ventas")
-
 
 #Lista los usuarios y los muestra en la tabla
 @app.route("/usuarios")

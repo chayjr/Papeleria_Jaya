@@ -19,11 +19,13 @@ def requiere_privilegio(nombre_privilegio):
         def envoltura(*args, **kwargs):
             #Validar login
             if "id_usuario" not in session:
-                return redirect("/")
+                return redirect(url_for("sesion.home"))
             
             #Validar sesion
-            if not validar_sesion():
-                return redirect("/")
+            respuesta = validar_sesion()
+            
+            if respuesta is not True:
+                return respuesta
 
             conn = conectar()
             cursor = conn.cursor(dictionary=True)
@@ -42,7 +44,8 @@ def requiere_privilegio(nombre_privilegio):
             ))
 
             privilegios = cursor.fetchall()
-
+            
+            cursor.close()
             conn.close()
 
             lista_privilegios = []
@@ -57,6 +60,7 @@ def requiere_privilegio(nombre_privilegio):
             #privilegio especifico
             if nombre_privilegio in lista_privilegios:
                 return func(*args, **kwargs)
+            flash("No tienes permisos para acceder","error")
             return render_template("acceso_denegado.html")
         return envoltura
     return decorator
@@ -86,7 +90,7 @@ def validar_sesion():
         return False
 
     #Tiempo limite
-    tiempo_limite = timedelta(minutes=15)
+    tiempo_limite = timedelta(minutes=10)
 
     ahora = datetime.now()
 
@@ -107,19 +111,24 @@ def validar_sesion():
 
             conn.commit()
             conn.close()
-            session.clear()
 
             flash("Sesión expirada por inactividad","warning")
-            return False
+            session.pop("id_usuario",None)
+            session.pop("usuario",None)
+            session.pop("id_rol",None)
+            session.pop("token",None)
+            return redirect(url_for("sesion.home"))
 
     #Validar Token
     if usuario["sesion_token"] != session["token"]:
 
         conn.close()
-        session.clear()
-
         flash("Sesión inválida","error")
-        return False
+        session.pop("id_usuario",None)
+        session.pop("usuario",None)
+        session.pop("id_rol",None)
+        session.pop("token",None)
+        return redirect(url_for("sesion.home"))
 
     #Actualizar actividad
     cursor.execute("""
@@ -142,50 +151,61 @@ def home ():
         password = request.form["contrasena"].strip()
 
         conn = conectar()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute ("SELECT * FROM usuario WHERE BINARY usuario = %s", (usuario,))
-        usuario_db = cursor.fetchone()
+        try:
 
-        #Verifica usuario y contraseña
-        if usuario_db and check_password_hash(usuario_db["contrasena"],password):
-            #Sesion activda
-            if usuario_db["sesion_token"] is not None:
-                #Validar tiempo
-                if usuario_db["ultima_actividad"]:
+            conn.start_transaction()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute ("SELECT * FROM usuario WHERE BINARY usuario = %s FOR UPDATE", (usuario,))
+            usuario_db = cursor.fetchone()
 
-                    diferencia = (datetime.now()- usuario_db["ultima_actividad"])
 
-                    #Si ya expiró
-                    if diferencia > timedelta(minutes=15):
+            #Verifica usuario y contraseña
+            if usuario_db and check_password_hash(usuario_db["contrasena"],password):
+                #Sesion activda
+                if usuario_db["sesion_token"] is not None:
+                    #Validar tiempo
+                    if usuario_db["ultima_actividad"]:
 
-                        cursor.execute("""UPDATE usuario SET sesion_token = NULL, ultima_actividad = NULL WHERE id_usuario = %s
-                        """, (usuario_db["id_usuario"],))
-                        conn.commit()
-                    else:
-                        flash("Este usuario ya tiene sesión activa","warning")
-                        conn.close()
-                        return render_template("base_login.html")
-            #Genera token 
-            token = secrets.token_hex(32)
-            #Guarda token y ultima actividad en la base de datos
-            cursor.execute("UPDATE usuario SET sesion_token = %s, ultima_actividad = %s WHERE id_usuario = %s", (token,datetime.now(),usuario_db["id_usuario"]))
-            conn.commit()
-            #Sesion flask
-            session.permanent = True
+                        diferencia = (datetime.now()- usuario_db["ultima_actividad"])
+
+                        #Si ya expiró
+                        if diferencia > timedelta(minutes=10):
+
+                            cursor.execute("""UPDATE usuario SET sesion_token = NULL, ultima_actividad = NULL WHERE id_usuario = %s
+                            """, (usuario_db["id_usuario"],))
+                            conn.commit()
+                        else:
+                            flash("Este usuario ya tiene sesión activa","warning")
+                            conn.close()
+                            return render_template("base_login.html")
+                #Genera token 
+                token = secrets.token_hex(32)
+                #Guarda token y ultima actividad en la base de datos
+                cursor.execute("UPDATE usuario SET sesion_token = %s, ultima_actividad = %s WHERE id_usuario = %s", (token,datetime.now(),usuario_db["id_usuario"]))
+                conn.commit()
+                #Sesion flask
+                session.permanent = True
             
-            session["id_usuario"] = usuario_db["id_usuario"]
-            session["usuario"] = usuario_db["usuario"]
-            session["id_rol"] = usuario_db["id_rol"]
-            session["token"] = token
+                session["id_usuario"] = usuario_db["id_usuario"]
+                session["usuario"] = usuario_db["usuario"]
+                session["id_rol"] = usuario_db["id_rol"]
+                session["token"] = token
 
-            if usuario_db["id_rol"] == 1:
                 flash("Bienvenido al sistema","success")
-                return redirect(url_for("dashboard"))
-            else: 
-                flash("Bienvenido al sistema","success")
-                return redirect(url_for("productos"))
-        else: 
-            flash ("Usuario o contraseña incorrectos","error")
+
+                if usuario_db["id_rol"] == 1:
+                    return redirect(url_for("dashboard"))
+                else: 
+                    return redirect(url_for("productos"))
+            else:
+                conn.rollback() 
+                flash ("Usuario o contraseña incorrectos","error")
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error al iniciar sesió: {str(e)}", "error")
+        finally:
+            cursor.close()
+            conn.close()
     return render_template("base_login.html")
 
 #Ruta para cerrar la sesion
@@ -206,6 +226,9 @@ def logout():
         conn.commit()
         conn.close()
 
-    session.clear()
     flash("Sesión cerrada correctamente","success")
+    session.pop("id_usuario",None)
+    session.pop("usuario",None)
+    session.pop("id_rol",None)
+    session.pop("token",None)
     return redirect(url_for("sesion.home")) 
