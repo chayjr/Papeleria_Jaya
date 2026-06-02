@@ -1,0 +1,55 @@
+.denegado-container{
+    min-height: calc(100vh - 80px); /* ajusta si tienes navbar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.denegado-box{
+    background: rgba(255,255,255,0.95);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    max-width: 600px;
+    width: 100%;
+}
+
+.icono{
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.denegado-box h1{
+    color: #4f63d8;
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.denegado-box p{
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.actionsdene{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.volver{
+    text-decoration: none;
+    background: #4f63d8;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.volver:hover{
+    background: #3549c2;
+    transform: translateY(-2px);
+}

@@ -44,7 +44,7 @@
 
     {% for p in bajos %}
 
-    <tr class="{% if p.cantidad <= 2%} critico {% else %} advertencia {% endif %}">
+    <tr class="{% if p.cantidad <= 3%} critico {% else %} advertencia {% endif %}">
         <td>{{ p.id_producto }}</td>
 
         <td>{{ p.nombre }}</td>
