@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+body {
+    
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, #b7e0c4, #8aa8e8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 1100px;
+    height: 600px;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.circle {
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    border: 5px dotted white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.6);
+}
+
+.circle h1 {
+    margin: 0;
+    text-align: center;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.circle span {
+    display: block;
+    font-size: 20px;
+    letter-spacing: 3px;
+}
+
+.circle strong {
+    font-size: 40px;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background: #f3f3f3;
+    border-radius: 20px;
+    padding: 40px 25px;
+    width: 280px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    border: 30px solid #4e6de6;
+    text-align: center;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 auto 15px;
+    position: relative;
+}
+
+.avatar::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: #888;
+    border-radius: 50%;
+}
+
+.avatar::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    background: #888;
+    border-radius: 20px 20px 0 0;
+}
+
+.input-group {
+    margin: 15px 0;
+}
+
+.input-group input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: #2cb1c7;
+    color: white;
+}
+
+.input-group input::placeholder {
+    color: white;
+}
+
+button {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background: #2cb1c7;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2499ac;
+}
+
+.mensaje {
+    margin-top: 15px;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 14px;
+    animation: aparecer 0.5s ease;
+}
+
+.mensaje.error {
+    color: rgb(182, 21, 21);
+}
+
+.mensaje.info {
+    color: rgb(44, 81, 245);
+}
+
+.mensaje.warning {
+    color: rgba(245, 134, 8, 0.986);
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

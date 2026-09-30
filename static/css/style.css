@@ -1,0 +1,293 @@
+/* RESET */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;   /* 🔥 fijo siempre */
+    top: 0;
+    left: 0;           /* 🔥 a la izquierda */
+    width: 250px;
+    height: 100vh;
+    background-color: #b3e274;
+    color: black;
+    padding: 20px;
+    display: flex;              /* 🔥 AGREGA ESTO */
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* LOGO */
+.sidebar .logo {
+    margin-bottom: 30px;
+}
+
+/* LISTA */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* 🔥 separación limpia y moderna */
+}
+
+/* ITEMS */
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+/* LINKS */
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 18px;
+    border-radius: 8px;
+    background-color: #5bbad5;   /* 🔥 azul fijo */
+    color: black;
+    transition: 0.3s;
+
+}
+
+/* ACTIVO */
+.sidebar ul li.active a {
+    background-color: #11657c;
+    color: black;
+}
+
+/* CONTENIDO (LA CLAVE 🔥) */
+.content {
+    margin-left: 250px;   /* 👈 evita que se monte */
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* ICONOS */
+.sidebar i {
+    width: 20px;
+    text-align: center;
+}
+
+/* boton de cerrar sesion abajo*/
+.logout {
+    margin-top: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.logout button {
+    width: 80%;
+    padding: 12px;
+    border: none;
+    background: #e5e5e5;
+    font-weight: bold;
+    cursor: pointer;
+
+}
+
+/* Formato de titulos por ventana centrados */
+.title {
+    background: #e5e5e5;
+    text-align: center;
+    padding: 12px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+/* diseño para las tablas de cada pestaña */
+table {
+    width: 90%;
+    border-collapse: collapse;
+    background: #e7e7e7;
+}
+
+/* diseño para darle forma curva a los botones*/
+.btn{
+    padding:6px 12px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+/* diseño para mostrar el usuario logueado*/
+.sesiona{
+    margin-top: auto;   /* 🔥 esta es la clave */
+    background: #d0fd93;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+
+@media (max-width: 768px) {
+     .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .logout button {
+        width: 100%;
+    }
+
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+.mensajeg{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-10%);
+    z-index: 99999;
+    min-width: 320px;
+    max-width: 400px;
+    padding: 16px 22px;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+    animation: mostrarToast 0.3s ease;
+    opacity: 1;
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+}
+
+/* SUCCESS */
+.mensajeg.success{
+    background: #2ecc71;
+}
+
+/* ERROR */
+.mensajeg.error{
+    background: #e74c3c;
+}
+/* WARNING */
+.mensajeg.warning{
+    background: #f39c12;
+}
+
+/* INFO */
+.mensajeg.info{
+    background: #3498db;
+}
+
+/* DANGER */
+.mensajeg.danger{
+    background: #c0392b;
+}
+
+@keyframes mostrarToast{
+
+    from{
+        opacity: 0;
+        transform: translate(-10%, -20%);
+    }
+    to{
+        opacity: 1;
+        transform: translate(-10%, 0);
+    }
+
+}
+
+/*Para mostrar animación de carga*/
+/* ===== LOADER ===== */
+
+#loader{
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(255,255,255,0.9);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s;
+}
+
+/* ACTIVO */
+#loader.active{
+    opacity: 1;
+    visibility: visible;
+}
+
+/* SPINNER */
+.spinner{
+    width: 70px;
+    height: 70px;
+
+    border: 8px solid #dcdcdc;
+    border-top: 8px solid #4c6ef5;
+
+    border-radius: 50%;
+
+    animation: girar 1s linear infinite;
+}
+
+/* CONTENIDO */
+.loader-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* TEXTO */
+.loader-content p{
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4c6ef5;
+
+    animation: parpadeo 1s infinite;
+}
+
+/* ANIMACIÓN */
+@keyframes girar{
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+/* EFECTO */
+@keyframes parpadeo{
+
+    0%{
+        opacity: 0.3;
+    }
+
+    50%{
+        opacity: 1;
+    }
+
+    100%{
+        opacity: 0.3;
+    }
+
+}

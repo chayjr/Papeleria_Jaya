@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+
+    <!-- CONTENIDO -->
+        <div class="title">Gestión de productos</div>
+
+        <div class="actionsg">
+            <!-- 🔥 FORMULARIOS REALES -->
+            <form action="/agregar_producto" method="POST" style="display:inline;">
+                <button class="btn add">Agregar producto</button>
+            </form>
+        </div>
+
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Producto</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+
+
+            {% for p in inventario %}
+            <tr>
+                <td>{{ p.id_producto }}</td>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.descripcion }}</td>
+                <td>{{ p.cantidad }}</td>
+                <td>{{ p.precio }}</td>
+                <td>
+                   <div class = "actionsga">
+                        <form action="/actualizar_producto/{{ p.id_producto}}" method="GET" style="display:inline;">
+                            <button class="btn editp">Editar</button>
+                        </form>
+
+                        <form action="/eliminar_producto/{{ p.id_producto }}" method="POST" style="display:inline;">
+                            <button class="btn deletep">Eliminar</button>
+                        </form>
+                   </div> 
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+{% endblock %}

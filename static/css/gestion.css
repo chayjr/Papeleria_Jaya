@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+/* 🔹 CONTENIDO */
+.content {
+    flex: 1;
+    background: #ffffff;
+    padding: 35px;
+}
+
+.content h1 {
+    font-size:48px;
+    color:#5b73e8;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+/* boton de agregar producto */
+.actionsg {
+    margin: 20px 0;
+    display:flex;
+    gap:30px;
+    margin-top:20px;
+}
+
+.add { background: #5ecad0; }
+
+
+th, td {
+    border: 2px solid black;
+    padding: 20px;
+    text-align: center;
+}
+
+th {
+    background: #e7e7e7;
+}
+
+/* botones de editar y eliminar productos */
+.actionsga{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+}
+.editp { background: #bde48f; }
+.deletep { background: #f29b63; }
+
+
+/* apartado para agregar producto*/
+.actionsp {
+    margin: 20px 0;
+    display:flex;
+    gap:30px;
+    margin-top:20px;
+}
+.guardar{ background:#5ecad0 ;}
+
+.cancelar{ 
+    background: #f29b63;
+    text-decoration: none;     /* quita el subrayado */
+    display: inline-block; 
+    color: black;
+    display: inline-block;
+    font-size: 13px;      /* 👈 CLAVE */
+    font-family: inherit;
+ }
+
+ .campo {
+    margin-bottom: 15px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.campo input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.campo input:focus {
+    border-color: #5a67d8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(90,103,216,0.5);
+}
+
+
+ 

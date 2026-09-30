@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <title>PAPELERIA JAYA - Login</title>
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+    <div class="left">
+        <div class="circle">
+            <h1>
+                <span>PAPELERIA</span>
+                <strong>JAYA</strong>
+            </h1>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="login-box">
+            <div class="avatar"></div>
+                <p>Inicie sesión para continuar</p>
+
+    
+                <form method="POST">
+
+                    <div class="input-group">
+                    <input type="text" name="usuario" placeholder="Usuario" required>
+                    </div>
+
+                    <div class="input-group">
+                    <input type="password" name="contrasena" placeholder="Contraseña" required>
+                    </div>
+
+                    <button type="submit">Ingresar</button>
+                    <!--Codigo para mostrar mensaje en pantalla de login -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for categoria, mensaje in messages %}
+                                <div class="mensaje {{ categoria }}">
+                                    {{ mensaje }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+</body>
+</html>
+

@@ -4,9 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/gestion.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/ventas.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/denegado.css') }}">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
     
+<body>
+    <div class ="layout">
+
+        <aside class ="sidebar">
+
+            <ul>
+                <!--Este es para el apartado del navbar de dasboard-->
+                <li class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+                    <a href="/dashboard" class="menu-btn">🖥️ PANEL PRINCIPAL</a>
+                </li>
+                <!--Este es para el apartado del navbar de productos-->
+                <li class="{% if request.endpoint == 'productos' %}active{% endif %}">
+                    <a href="/productos" class="menu-btn">📦 PRODUCTOS</a>
+                </li>
+                <!--Este es para el apartado del navbar de ventas-->
+                <li class="{% if request.endpoint == 'ventas' %}active{% endif %}">
+                    <a href="/ventas" class="menu-btn">🛒 VENTAS</a>
+                </li>
+                <!--Este es para el apartado del navbar de Reportes-->
+                <li class="{% if request.endpoint == 'reportes' %}active{% endif %}">
+                    <a href="/reportes" class="menu-btn">📖 REPORTES</a>
+                </li>
+                <!--Este es para el apartado del navbar de usuarios-->
+                <li class= "{% if request.endpoint == 'usuarios' %}active{% endif %}">
+                    <a href="/usuarios" class="menu-btn">👥 USUARIOS</a>
+                </li>
+
+
+                <div class="logout">
+                     <a href="/logout"><button>CERRAR SESIÓN</button></a>
+                </div>
+
+                <div class="sesiona">
+                    {% if 'id_usuario' in session %}
+                    <p class="usuario-logueado">
+                        👤 {{ session['usuario'] }}
+                    </p>
+                    {% endif %}
+                </div>
+            </ul>
+        </aside>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mensajeg {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+       <!-- CONTENIDO -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader">
+
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Cargando...</p>
+        </div>
+
+    </div>
+    <script>
+
+    setTimeout(() => {
+
+        document.querySelectorAll(".mensajeg")
+        .forEach(alerta => {
+
+            alerta.style.opacity = "0";
+
+            alerta.style.transform =
+                "translate(-50%, -20px)";
+
+            setTimeout(() => {
+
+                alerta.remove();
+
+            }, 500);
+
+        });
+
+    }, 3000);
+
+    </script>
+
+    <script>
+
+    function mostrarLoader(event, url=null, form=null){
+
+        event.preventDefault();
+
+        // Mostrar loader
+        document.getElementById("loader").classList.add("active");
+
+        // Esperar 1.5 segundos
+        setTimeout(() => {
+
+            if(url){
+                window.location.href = url;
+            }
+
+            if(form){
+                form.submit();
+            }
+
+        }, 700);
+
+    }
+
+
+    // LINKS
+    document.querySelectorAll("a").forEach(link => {
+
+        link.addEventListener("click", function(event){
+
+            const url = this.href;
+
+            mostrarLoader(event, url);
+
+        });
+
+    });
+
+
+    // FORMULARIOS
+    document.querySelectorAll("form").forEach(form => {
+
+        form.addEventListener("submit", function(event){
+
+            mostrarLoader(event, null, form);
+
+        });
+
+    });
+
+    </script>
 </body>
 </html>

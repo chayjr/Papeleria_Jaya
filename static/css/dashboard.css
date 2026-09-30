@@ -1,0 +1,59 @@
+.dashboard-container{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:40px;
+}
+
+.card{
+    background:#e7e7e7;
+    padding:30px 60px;
+    border-radius:6px;
+    text-align:center;
+}
+
+.card h2{
+    font-size:40px;
+    color:#5b73e8;
+    margin:0;
+}
+
+.card span{
+    font-weight:600;
+}
+
+.actions{
+    display:flex;
+    gap:25px;
+    margin-top:-15px;
+    background:#f7f7f7;
+    padding:15px 60px;
+    border-radius:6px;
+    text-align:left;
+}
+    .update{background:#64def3;}
+    .low{background:#f19a5b;}
+
+.subtitle{
+    font-size:25px;
+    color:#5b73e8;
+    font-weight:600;
+    margin-bottom:15px;
+    margin-top:25px;
+    background:#e7e7e7;
+    padding:15px 60px;
+    border-radius:6px;
+    text-align:left;
+}
+
+/* STOCK BAJO */
+.advertencia td{
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* STOCK CRÍTICO */
+.critico td{
+    background-color: #f8d7da;
+    color: #c32434;
+}
